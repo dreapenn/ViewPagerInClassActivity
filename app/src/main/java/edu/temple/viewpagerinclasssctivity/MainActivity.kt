@@ -10,6 +10,8 @@ import androidx.viewpager2.widget.ViewPager2
 
 class MainActivity : AppCompatActivity() {
 
+    private var numOfPages = 0
+
     val viewPager : ViewPager2 by lazy{
         findViewById(R.id.viewPager)
     }
@@ -21,12 +23,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         newButton.setOnClickListener{
+            numOfPages++
+            viewPager.adapter?.notifyItemInserted(numOfPages-1)
+            viewPager.setCurrentItem(numOfPages)
 
         }
 
-        viewPager.adapter = object: FragmentStateAdapter(this) {
-            override fun getItemCount() = 10
+        supportFragmentManager.findFragmentByTag("f${numOfPages}")
 
+        viewPager.adapter = object: FragmentStateAdapter(this) {
+            override fun getItemCount() = numOfPages
             override fun createFragment(position: Int) = TextFragment.newInstance((position + 1).toString())
 
         }
